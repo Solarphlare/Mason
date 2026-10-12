@@ -29,7 +29,7 @@ MAKEFLAGS += -j$(shell echo $(shell nproc) / 2 | bc)
 # ——— Project Layout ———
 SRCDIR   := src
 BUILDDIR := build
-TARGET   := shinx
+TARGET   := mason
 
 # find all .cc under src/, map them to .o under build/
 SRCS  := $(shell find $(SRCDIR) -name '*.cc')

@@ -1,5 +1,5 @@
 .vscode/
 build/
-shinx
+mason
 .env
 .DS_Store

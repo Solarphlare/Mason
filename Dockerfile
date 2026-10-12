@@ -49,9 +49,9 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /usr/local/lib /usr/local/lib
-COPY --from=build /tmp/build/shinx /opt/shinx
+COPY --from=build /tmp/build/mason /opt/mason
 
 RUN echo "/usr/local/lib" | tee /etc/ld.so.conf.d/local.conf
 RUN ldconfig
 
-ENTRYPOINT ["/opt/shinx"]
+ENTRYPOINT ["/opt/mason"]
