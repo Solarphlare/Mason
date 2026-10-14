@@ -9,6 +9,7 @@ services:
     networks:
       - open-web-net
       - internal-net
+    restart: unless-stopped
 
   db:
     image: mongo:8.0.4
@@ -16,6 +17,7 @@ services:
       - internal-net
     volumes:
       - mongo-data:/data/db
+    restart: unless-stopped
 
 networks:
   open-web-net:
