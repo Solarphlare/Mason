@@ -27,18 +27,18 @@ namespace events {
         if (!settings_doc || !settings_doc->view()["lobby_channel_id"]) co_return;
         const dpp::snowflake lobby_channel_id = static_cast<std::string>(settings_doc->view()["lobby_channel_id"].get_string().value);
 
+        auto& locations = user_locations[event.state.guild_id];
+        auto previous = locations.find(event.state.user_id);
+
+        if (previous != locations.end() && previous->second != event.state.channel_id) {
+            co_await voice::handle_user_disconnect(event);
+        }
+
         if (event.state.channel_id == lobby_channel_id) {
             co_await voice::create_apartment(event);
         }
-        else if (event.state.channel_id.empty()) {
-            co_await voice::handle_user_disconnect(event);
-        }
         else if (apartments.find(event.state.channel_id) != apartments.end()) {
             user_locations[event.state.guild_id][event.state.user_id] = event.state.channel_id;
-        }
-        else if (user_locations[event.state.guild_id].find(event.state.user_id) != user_locations[event.state.guild_id].end()) {
-            // user switched to a channel that isn't an apartment, remove them from the map
-            user_locations[event.state.guild_id].erase(event.state.user_id);
         }
     }
 }
