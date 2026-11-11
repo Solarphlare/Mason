@@ -26,7 +26,12 @@ namespace commands::lock {
             co_return;
         }
 
-        channel.add_permission_overwrite(event.command.guild_id, dpp::ot_role, dpp::p_send_messages, dpp::p_connect);
+        // for each member in the channel - allow connect permissions
+        for (const auto& member : channel.get_voice_members()) {
+            channel.add_permission_overwrite(member.first, dpp::ot_member, dpp::p_send_messages, dpp::p_connect);
+        }
+
+        channel.add_permission_overwrite(event.command.guild_id, dpp::ot_role, 0, dpp::p_connect);
         dpp::confirmation_callback_t update_callback = co_await event.owner->co_channel_edit(channel);
         if (update_callback.is_error()) {
             std::cerr << "Failed to lock the apartment: " << update_callback.get_error().message << "\n";

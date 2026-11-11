@@ -31,5 +31,13 @@ namespace voice {
                 db::voice::remove_apartment(apartment_id, event.state.guild_id);
             }
         }
+        else {
+            // if the channel is locked, remove the permission overwrite for the user who left
+            apartment_channel.remove_permission_overwrite(event.state.user_id, dpp::ot_member);
+            dpp::confirmation_callback_t update_callback = co_await event.owner->co_channel_edit(apartment_channel);
+            if (update_callback.is_error()) {
+                std::cerr << "Failed to update apartment permissions: " << update_callback.get_error().human_readable << "\n";
+            }
+        }
     }
 }
